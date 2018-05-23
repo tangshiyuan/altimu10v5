@@ -84,7 +84,7 @@ class LSM6DS33(I2C):
 
     def calibrate(self, iterations=2000):
         """ Calibrate the gyro's raw values."""
-        print('Calibrating Gryo and Accelerometer...')
+        print('Calibrating Gyro and Accelerometer...')
 
         for i in range(iterations):
             gyro_raw = self.get_gyroscope_raw()
@@ -166,6 +166,19 @@ class LSM6DS33(I2C):
         z_val = (z_val * ACCEL_CONVERSION_FACTOR) / 1000
 
         return [x_val, y_val, z_val]
+    
+    def getAccelerometer3Angles(self):
+        """ Calculate accelerometer angles. """
+        # Get raw accelerometer data
+        [accelXRaw, accelYRaw, accelZRaw] = self.get_accelerometer_raw()
+
+        # Calculate angles
+        accelXAngle = math.degrees(math.atan2(accelYRaw, accelZRaw) + math.pi)
+        accelYAngle = math.degrees(math.atan2(accelXRaw, accelZRaw) + math.pi)
+        accelZAngle = math.degrees(math.atan2(accelXRaw, accelYRaw) + math.pi)
+
+        # Return vector
+        return [accelXAngle, accelYAngle, accelZAngle]
 
     def get_accelerometer_angles(self, round_digits=0):
         """ Return a 2D vector of roll and pitch angles,
