@@ -8,14 +8,15 @@
 from bluetooth import *
 import sys
 
-addr = None
+#addr = None
+addr = "B8:27:EB:B6:17:14"
 
-if len(sys.argv) < 2:
-    print "no device specified.  Searching all nearby bluetooth devices for"
-    print "the SampleServer service"
-else:
-    addr = sys.argv[1]
-    print "Searching for SampleServer on %s" % addr
+#if len(sys.argv) < 2:
+#    print "no device specified.  Searching all nearby bluetooth devices for"
+#    print "the SampleServer service"
+#else:
+#    addr = sys.argv[1]
+#    print "Searching for SampleServer on %s" % addr
 
 # search for the SampleServer service
 uuid = "94f39d29-7d6d-437d-973b-fba39e49d4ee"
@@ -41,5 +42,8 @@ while True:
     data = raw_input()
     if len(data) == 0: break
     sock.send(data)
+    receive = sock.recv(3000) #1024 in example
+    print "Receive back echo [%s]" % receive
+
 
 sock.close()
