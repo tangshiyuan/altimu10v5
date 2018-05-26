@@ -6,6 +6,13 @@ import data_function
 import time
 import RPi.GPIO as GPIO
 
+def turn_on(pin):
+    GPIO.output(pin, (GPIO.HIGH))
+    #print('on')
+    time.sleep(0.1)
+    
+    GPIO.output(pin, (GPIO.LOW))
+    #print('off')
 
 # Initialise GPIO components
 GPIO.setmode(GPIO.BCM)
@@ -50,16 +57,22 @@ try:
         float_list.append(force)
         print("Local L data:", float_list)
         client_sock.send("100") # request sensor data from client
-        recv_data = client_sock.recv(3000) #1024 in example
+        
+        time.sleep(0.01)
+        
+        recv_data = client_sock.recv(3000).decode("utf-8") #1024 in example
         print("received R data: [%s]" % recv_data)      
         recv_data = data_function.convert_data(recv_data)
-        print("received R data:", recv_data) 
+        #print("received R data:", recv_data) 
         
         # model prediction
         if (recv_data[-1] >= 3):
             board.output(200) # turn on LED on ADDA board
-            #GPIO.output(pin, (GPIO.LOW if state == 0 else GPIO.HIGH))
-            GPIO.output(pin1, (GPIO.HIGH)) # turn on buzzer
+
+            #GPIO.output(pin1, (GPIO.HIGH)) # turn on buzzer
+            t1 = Thread(target=turn_on, args=(pin1,))
+            if not t1.is_alive():
+                t1.start()
         
         # output feedback signal
         if (float_list[-1]>=3):
@@ -68,10 +81,10 @@ try:
         #client_sock.send("prediction data")
         #if len(sensor_data) == 0: break
         
-        time.sleep(0.1)
+        #time.sleep(0.1)
         #time.sleep(0.01)
         
-        GPIO.output(pin1, (GPIO.LOW))
+        #GPIO.output(pin1, (GPIO.LOW))
         
 except IOError:
     pass

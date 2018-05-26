@@ -7,6 +7,14 @@ import time
 import RPi.GPIO as GPIO
 import sys
 
+def turn_on(pin):
+    GPIO.output(pin, (GPIO.HIGH))
+    #print('on')
+    time.sleep(0.1)
+    
+    GPIO.output(pin, (GPIO.LOW))
+    #print('off')
+    
 # Initialise GPIO components
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
@@ -69,19 +77,22 @@ while True:
         # send data
         sock.send(data)
         
-    elif (receive == "501"):
+    elif (receive == "501"): # command to output signal
         board.output(200) # turn on LED on ADDA board
-        GPIO.output(pin1, (GPIO.HIGH)) # turn on buzzer
+        #GPIO.output(pin1, (GPIO.HIGH)) # turn on buzzer
+        t1 = Thread(target=turn_on, args=(pin1,))
+        if not t1.is_alive():
+            t1.start()
         
         
     else :
         pass
 
     
-    time.sleep(0.1)
+    #time.sleep(0.1)
     #time.sleep(0.01)
     
-    GPIO.output(pin1, (GPIO.LOW))
+    #GPIO.output(pin1, (GPIO.LOW))
     
 sock.close()
 
