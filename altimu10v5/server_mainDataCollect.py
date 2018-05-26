@@ -1,6 +1,7 @@
 from Board import *
 from lsm6ds33 import LSM6DS33
 from bluetooth import *
+from threading import Thread
 
 import data_function
 import time
