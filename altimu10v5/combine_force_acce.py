@@ -26,7 +26,12 @@ while (1):
     accel_g_force_L = lsm6ds33.get_accelerometer_g_forces()
     
     print("%s: force_sensor:%d" % (time.asctime(), value))
+    #print(type(value))
     print("Accel_g_force:" , accel_g_force_L)
+    #print(type(accel_g_force_L))
+    float_list = accel_g_force_L
+    float_list.append(value)
+    print(float_list)
     #print("Roll_Pitch:", lsm6ds33.get_accelerometer_angles())
     #print("Accel_3_angles:", lsm6ds33.getAccelerometer3Angles())
     

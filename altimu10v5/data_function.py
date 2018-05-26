@@ -15,8 +15,15 @@ def record_data_csv(data_str, path):
     temp_df = pd.DataFrame(np.array(data_list).reshape(-1,len(data_list)), columns = ['accX_R','accY_R','accZ_R'])
     temp_df['time'] = datetime.now().strftime("%Y%m%d-%H:%M:%S.%f")
     temp_df.to_csv(path+'recorded_dataset.csv', mode='a', index = False, header=False)
-    #df = df.append(temp_df, ignore_index=True)
-    #return df
+    return
+
+def combine_record_data_csv(data_floatlist, data_str, path):
+    data_list = convert_data(data_str)
+    data_floatlist.extend(data_list)
+    temp_df = pd.DataFrame(np.array(data_floatlist).reshape(-1,len(data_floatlist)), 
+                           columns = ['accX_L','accY_L','accZ_L','Force_L','accX_R','accY_R','accZ_R','Force_R'])
+    temp_df['time'] = datetime.now().strftime("%Y%m%d-%H:%M:%S.%f")
+    temp_df.to_csv(path+'recorded_dataset.csv', mode='a', index = False, header=False)
     return
 
 def floatlist2string(mylist):    
