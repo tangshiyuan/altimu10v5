@@ -63,7 +63,7 @@ while True:
     print("Receive command: [%s]" % receive)
     if (receive == "100"): # sensor data requested
         force = board.custom() # force sensor data
-        loat_list = lsm6ds33.get_accelerometer_g_forces() # accel data
+        float_list = lsm6ds33.get_accelerometer_g_forces() # accel data
         float_list.append(force)
         
         # convert float list to string
