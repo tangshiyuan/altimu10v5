@@ -34,3 +34,10 @@ def floatlist2string(mylist):
         if (i != len(mylist)-1):
             convert +=', '
     return convert
+
+def round_floatlist(mylist, dec):
+    convert = []
+    for ele in mylist:
+        ele = round(ele, dec)
+        convert.append(ele)
+    return convert

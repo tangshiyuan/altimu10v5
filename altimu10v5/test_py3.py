@@ -1,11 +1,12 @@
 from lsm6ds33 import LSM6DS33
 from time import sleep
+import data_function
 
 lsm6ds33 = LSM6DS33()
 lsm6ds33.enable()
 
 while True:
-    accel_g_force_L = lsm6ds33.get_accelerometer_g_forces()
+    accel_g_force_L = data_function.round_floatlist(lsm6ds33.get_accelerometer_g_forces(),3)
     print("  ")
     print("Accel_g_force:", accel_g_force_L)
     print("Roll_Pitch:", lsm6ds33.get_accelerometer_angles())

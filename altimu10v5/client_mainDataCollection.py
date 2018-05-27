@@ -64,7 +64,7 @@ while True:
     print("Receive command: [%s]" % receive)
     if (receive == "100"): # sensor data requested
         force = board.custom() # force sensor data
-        float_list = lsm6ds33.get_accelerometer_g_forces() # accel data
+        float_list = data_function.round_floatlist(lsm6ds33.get_accelerometer_g_forces(),3) # accel data
         float_list.append(force)
         
         # convert float list to string
@@ -91,7 +91,7 @@ while True:
 
     
     #time.sleep(0.1)
-    #time.sleep(0.01)
+    time.sleep(0.01)
     
     #GPIO.output(pin1, (GPIO.LOW))
     

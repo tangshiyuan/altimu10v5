@@ -10,7 +10,7 @@ import RPi.GPIO as GPIO
 def turn_on(pin):
     GPIO.output(pin, (GPIO.HIGH))
     #print('on')
-    time.sleep(0.1)
+    time.sleep(0.05)
     
     GPIO.output(pin, (GPIO.LOW))
     #print('off')
@@ -54,14 +54,14 @@ print("Accepted connection from ", client_info)
 try:
     while True:
         force = board.custom() # force sensor data
-        float_list = lsm6ds33.get_accelerometer_g_forces() # accel data
+        float_list = data_function.round_floatlist(lsm6ds33.get_accelerometer_g_forces(),3) # accel data
         float_list.append(force)
         print("Local L data:", float_list)
         client_sock.send("100") # request sensor data from client
         
-        time.sleep(0.01)
+        #time.sleep(0.01)
         
-        recv_data = client_sock.recv(3000).decode("utf-8") #1024 in example
+        recv_data = client_sock.recv(100).decode("utf-8") #1024 in example
         print("received R data: [%s]" % recv_data)      
         recv_data = data_function.convert_data(recv_data)
         #print("received R data:", recv_data) 
