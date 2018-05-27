@@ -48,4 +48,4 @@ def rss_floatlist(mylist):
     sum = 0
     for ele in mylist:
         sum += ele*ele
-    return  math.sqrt(sum)
+    return  round(math.sqrt(sum),3)
