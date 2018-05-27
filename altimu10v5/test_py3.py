@@ -7,6 +7,7 @@ lsm6ds33.enable()
 
 while True:
     accel_g_force_L = data_function.round_floatlist(lsm6ds33.get_accelerometer_g_forces(),3)
+    accel_g_force_L.append(data_function.rss_float_list(accel_g_force_L))
     print("  ")
     print("Accel_g_force:", accel_g_force_L)
     print("Roll_Pitch:", lsm6ds33.get_accelerometer_angles())

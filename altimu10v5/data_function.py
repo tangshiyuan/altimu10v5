@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import os
+import math
 from datetime import datetime
 
 def convert_data(data_str):
@@ -18,10 +19,11 @@ def record_data_csv(data_str, path):
     return
 
 def combine_record_data_csv(data_floatlist, data_str, path):
-    data_list = convert_data(data_str)
+    #data_list = convert_data(data_str)
+    data_list = data_str
     data_floatlist.extend(data_list)
     temp_df = pd.DataFrame(np.array(data_floatlist).reshape(-1,len(data_floatlist)), 
-                           columns = ['accX_L','accY_L','accZ_L','Force_L','accX_R','accY_R','accZ_R','Force_R'])
+                           columns = ['accX_L','accY_L','accZ_L','acc_L','Force_L','accX_R','accY_R','accZ_R','acc_R','Force_R'])
     temp_df['time'] = datetime.now().strftime("%Y%m%d-%H:%M:%S.%f")
     temp_df.to_csv(path+'recorded_dataset.csv', mode='a', index = False, header=False)
     return
@@ -41,3 +43,9 @@ def round_floatlist(mylist, dec):
         ele = round(ele, dec)
         convert.append(ele)
     return convert
+
+def rss_floatlist(mylist):
+    sum = 0
+    for ele in mylist:
+        sum += ele*ele
+    return  math.sqrt(sum)

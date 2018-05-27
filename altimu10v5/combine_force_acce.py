@@ -1,6 +1,7 @@
 from Board import *
 from lsm6ds33 import LSM6DS33
 import time
+import data_function
 
 import RPi.GPIO as GPIO
  
@@ -30,6 +31,8 @@ while (1):
     print("Accel_g_force:" , accel_g_force_L)
     #print(type(accel_g_force_L))
     float_list = accel_g_force_L
+    float_list = data_function.round_floatlist(float_list,3)
+    float_list.append(data_function.rss_floatlist(float_list))
     float_list.append(value)
     print(float_list)
     #print("Roll_Pitch:", lsm6ds33.get_accelerometer_angles())
