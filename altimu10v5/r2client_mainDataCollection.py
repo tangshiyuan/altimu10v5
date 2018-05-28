@@ -45,16 +45,17 @@ while True:
     #if len(data) == 0: break
     #sock.send(data)
     receive = sock.recv(3000).decode("utf-8")  #1024 in example #convert byte to string
+    receive = data_function.convert_data(receive,1)
     #print(type(receive))
-    print("Receive command: [%s]" % receive)
-    if (receive == "100"): # sensor data requested
-        force = board.custom() # force sensor data
-        float_list = data_function.round_floatlist(lsm6ds33.get_accelerometer_g_forces(),3) # accel data
-        float_list.append(data_function.rss_floatlist(float_list))
-        float_list.append(force)
+    print("Receive command:" ,receive)
+    #if (receive == "100"): # sensor data requested
+    force = board.custom() # force sensor data
+    float_list = data_function.round_floatlist(lsm6ds33.get_accelerometer_g_forces(),3) # accel data
+    float_list.append(data_function.rss_floatlist(float_list))
+    float_list.append(force)
         
         # convert float list to string
-        data = data_function.floatlist2string(float_list)
+    data = data_function.floatlist2string(float_list)
         
         #accel_g_force_R = lsm6ds33.get_accelerometer_g_forces()
         #accelX_R = accel_g_force_R[0]
@@ -62,9 +63,9 @@ while True:
         #print(data)
         
         # send data
-        sock.send(data.encode("utf-8"))
+    sock.send(data.encode("utf-8"))
         
-    elif (receive == "501"): # command to output signal
+    if (int(receive[0])== 501): # command to output signal
         board.output(200) # turn on LED on ADDA board
         #GPIO.output(pin1, (GPIO.HIGH)) # turn on buzzer
         t1 = Thread(target=turn_on, args=(pin1,))

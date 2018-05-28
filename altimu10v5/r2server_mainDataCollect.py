@@ -50,11 +50,11 @@ time.sleep(1)
 board.output(200)
 time.sleep(1)
 
-# create folder to store data
-timestr = time.strftime("%Y%m%d-%H%M%S")
-path = '/home/pi/Desktop/Data/'+timestr+'/'
-if not os.path.exists(path):
-    os.makedirs(path)
+### create folder to store data
+##timestr = time.strftime("%Y%m%d-%H%M%S")
+##path = '/home/pi/Desktop/Data/'+timestr+'/'
+##if not os.path.exists(path):
+##    os.makedirs(path)
 
 try:
     while True:
@@ -65,13 +65,13 @@ try:
         float_list.append(data_function.rss_floatlist(float_list))
         float_list.append(force)
         print("Local L data:", float_list)
-        client_sock.send("100".encode("utf-8")) # request sensor data from client
+        client_sock.send("100,".encode("utf-8")) # request sensor data from client
         
         #time.sleep(0.01)
         
         recv_data = client_sock.recv(1024).decode("utf-8") #1024 in example
         print("received R data: [%s]" % recv_data)      
-        recv_data = data_function.convert_data(recv_data)
+        recv_data = data_function.convert_data(recv_data,5)
         #print("received R data:", recv_data) 
         
         
@@ -87,11 +87,11 @@ try:
         # output feedback signal
         if (float_list[-1]>=3):
             print('ask R output')
-            client_sock.send("501".encode("utf-8")) # ask client to turn on output
+            client_sock.send("501,".encode("utf-8")) # ask client to turn on output
         
         
         # save data
-        data_function.combine_record_data_csv(float_list, recv_data, path)
+        #data_function.combine_record_data_csv(float_list, recv_data, path)
         
         #print(float_list[-1])
         

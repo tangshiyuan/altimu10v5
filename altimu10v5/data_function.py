@@ -4,12 +4,31 @@ import os
 import math
 from datetime import datetime
 
-def convert_data(data_str):
+##def convert_data(data_str):
+##    data_list = [x.strip() for x in data_str.split(',')]
+##    data_converted = []
+##    for ele in data_list:
+##        data_converted.append(float(ele))
+##    return (data_converted) # return a float list
+
+def convert_data(data_str, variables):
     data_list = [x.strip() for x in data_str.split(',')]
+    if (data_list[-1]==''):
+        data_list = data_list[:-1]
     data_converted = []
     for ele in data_list:
         data_converted.append(float(ele))
-    return (data_converted) # return a float list
+        
+    while True:
+        print(len(data_converted))
+        if (len(data_converted)%variables == 0):
+            print(len(data_converted)%variables)
+            result = data_converted[-variables:]
+            break
+        else :
+            data_converted = data_converted[:-1]
+        
+    return result
 
 def record_data_csv(data_str, path):
     #data_list = convert_data(data_str)
