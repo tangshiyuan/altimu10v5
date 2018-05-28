@@ -1,0 +1,68 @@
+from Board import *
+from lsm6ds33 import LSM6DS33
+import time
+import os
+import data_function
+
+import RPi.GPIO as GPIO
+ 
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
+pin1 = 17 # pin 11 on the RP board
+#pin2 = 27
+GPIO.setup(pin1, GPIO.OUT)
+#GPIO.setup(pin2, GPIO.OUT)
+
+board = Board()
+
+lsm6ds33 = LSM6DS33()
+lsm6ds33.enable()
+
+# show ready
+board.output(150)
+time.sleep(1)
+board.output(200)
+time.sleep(1)
+
+# create folder to store data
+timestr = time.strftime("%Y%m%d-%H%M%S")
+path = '/home/pi/Desktop/Data/'+timestr+'/'
+if not os.path.exists(path):
+    os.makedirs(path)
+
+while (1):
+##    print("%s: control:%d light:%d temp:%d custom:%d" % (time.asctime(),
+##                                                         board.control(),
+##                                                         board.light(),
+##                                                         board.temperature(),
+##                                                         board.custom()))
+    value = board.custom()
+    accel_g_force_L = lsm6ds33.get_accelerometer_g_forces()
+    
+    print("%s: force_sensor:%d" % (time.asctime(), value))
+    #print(type(value))
+    print("Accel_g_force:" , accel_g_force_L)
+    #print(type(accel_g_force_L))
+    float_list = accel_g_force_L
+    float_list = data_function.round_floatlist(float_list,3)
+    float_list.append(data_function.rss_floatlist(float_list))
+    float_list.append(value)
+    print(float_list)
+    #print("Roll_Pitch:", lsm6ds33.get_accelerometer_angles())
+    #print("Accel_3_angles:", lsm6ds33.getAccelerometer3Angles())
+    
+    if (value >= 3):
+        board.output(200) # turn on LED on ADDA board
+        #GPIO.output(pin, (GPIO.LOW if state == 0 else GPIO.HIGH))
+        GPIO.output(pin1, (GPIO.HIGH))
+    #else:
+        #GPIO.output(pin2, (GPIO.HIGH))
+    #sleep(0.05)
+    
+    # save data
+    data_function.record_data_csv(float_list, path) 
+    
+    
+    #sleep(0.01)
+    GPIO.output(pin1, (GPIO.LOW))
+    #GPIO.output(pin2, (GPIO.LOW))

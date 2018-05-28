@@ -1,8 +1,8 @@
 from Board import *
 from lsm6ds33 import LSM6DS33
-from bluetooth import *
 from threading import Thread
 
+import socket
 import data_function
 import time
 import os
@@ -31,25 +31,17 @@ board = Board()
 lsm6ds33 = LSM6DS33()
 lsm6ds33.enable()
 
-# Initialise bluetooth socket
-server_sock=BluetoothSocket( RFCOMM )
-server_sock.bind(("",PORT_ANY))
-server_sock.listen(1)
+# Initialise socket
+s = socket.socket()
+host = '192.168.1.238' #ip of host
+port = 12345
+s.bind((host, port))
 
-port = server_sock.getsockname()[1]
-
-uuid = "94f39d29-7d6d-437d-973b-fba39e49d4ee"
-
-advertise_service( server_sock, "Rasp Pi3 Master",
-                   service_id = uuid,
-                   service_classes = [ uuid, SERIAL_PORT_CLASS ],
-                   profiles = [ SERIAL_PORT_PROFILE ], 
-#                   protocols = [ OBEX_UUID ] 
-                    )
+s.listen(100)
                    
 print("Waiting for connection on RFCOMM channel %d" % port)
 
-client_sock, client_info = server_sock.accept()
+client_sock, client_info = s.accept()
 print("Accepted connection from ", client_info)
 
 # show ready
@@ -73,7 +65,7 @@ try:
         float_list.append(data_function.rss_floatlist(float_list))
         float_list.append(force)
         print("Local L data:", float_list)
-        client_sock.send("100") # request sensor data from client
+        client_sock.send("100".encode("utf-8")) # request sensor data from client
         
         #time.sleep(0.01)
         
@@ -95,11 +87,12 @@ try:
         # output feedback signal
         if (float_list[-1]>=3):
             print('ask R output')
-            client_sock.send("501") # ask client to turn on output
+            client_sock.send("501".encode("utf-8")) # ask client to turn on output
         
         
         # save data
-        data_function.combine_record_data_csv(float_list, recv_data, path)
+        #data_function.combine_record_data_csv(float_list, recv_data, path)
+        
         #print(float_list[-1])
         
         #client_sock.send("prediction data")

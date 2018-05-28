@@ -12,8 +12,9 @@ def convert_data(data_str):
     return (data_converted) # return a float list
 
 def record_data_csv(data_str, path):
-    data_list = convert_data(data_str)
-    temp_df = pd.DataFrame(np.array(data_list).reshape(-1,len(data_list)), columns = ['accX_R','accY_R','accZ_R'])
+    #data_list = convert_data(data_str)
+    data_list = data_str
+    temp_df = pd.DataFrame(np.array(data_list).reshape(-1,len(data_list)), columns = ['acLX_R','accY_L','accZ_L','acc_L','Force_L'])
     temp_df['time'] = datetime.now().strftime("%Y%m%d-%H:%M:%S.%f")
     temp_df.to_csv(path+'recorded_dataset.csv', mode='a', index = False, header=False)
     return
