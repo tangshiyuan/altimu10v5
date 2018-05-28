@@ -20,10 +20,28 @@ def convert_data(data_str, variables):
         data_converted.append(float(ele))
         
     while True:
-        print(len(data_converted))
         if (len(data_converted)%variables == 0):
-            print(len(data_converted)%variables)
             result = data_converted[-variables:]
+            break
+        else :
+            data_converted = data_converted[:-1]
+        
+    return result
+
+def convert_data2(data_str, variables):
+    data_list = [x.strip() for x in data_str.split(',')]
+    if (data_list[-1]==''):
+        data_list = data_list[:-1]
+    data_converted = []
+    for ele in data_list:
+        data_converted.append(float(ele))
+    
+    while True:
+        last = data_converted[-1]
+        #print(last)
+        if (last == int(last)):
+            result = data_converted[-variables:]
+
             break
         else :
             data_converted = data_converted[:-1]

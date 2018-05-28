@@ -50,11 +50,11 @@ time.sleep(1)
 board.output(200)
 time.sleep(1)
 
-### create folder to store data
-##timestr = time.strftime("%Y%m%d-%H%M%S")
-##path = '/home/pi/Desktop/Data/'+timestr+'/'
-##if not os.path.exists(path):
-##    os.makedirs(path)
+# create folder to store data
+timestr = time.strftime("%Y%m%d-%H%M%S")
+path = '/home/pi/Desktop/Data/'+timestr+'/'
+if not os.path.exists(path):
+    os.makedirs(path)
 
 try:
     while True:
@@ -69,9 +69,10 @@ try:
         
         #time.sleep(0.01)
         
-        recv_data = client_sock.recv(1024).decode("utf-8") #1024 in example
+        recv_data = client_sock.recv(3000).decode("utf-8") #1024 in example
         print("received R data: [%s]" % recv_data)      
-        recv_data = data_function.convert_data(recv_data,5)
+        #recv_data = data_function.convert_data(recv_data,5)
+        recv_data = data_function.convert_data2(recv_data,5)
         #print("received R data:", recv_data) 
         
         
@@ -91,7 +92,7 @@ try:
         
         
         # save data
-        #data_function.combine_record_data_csv(float_list, recv_data, path)
+        data_function.combine_record_data_csv(float_list, recv_data, path)
         
         #print(float_list[-1])
         
@@ -109,6 +110,6 @@ except IOError:
 print("disconnected")
 
 client_sock.close()
-server_sock.close()
+sock.close()
 print("all done")
 

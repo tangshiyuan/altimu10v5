@@ -55,7 +55,7 @@ while True:
     float_list.append(force)
         
         # convert float list to string
-    data = data_function.floatlist2string(float_list)
+    data = data_function.floatlist2string(float_list)+','
         
         #accel_g_force_R = lsm6ds33.get_accelerometer_g_forces()
         #accelX_R = accel_g_force_R[0]
