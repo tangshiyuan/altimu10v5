@@ -83,11 +83,16 @@ for i in range(0,look_back+1):
     client_sock.send("100,".encode("utf-8")) # request sensor data from client
         
     recv_data = client_sock.recv(3000).decode("utf-8") #1024 in example
-    recv_data = data_function.convert_data2(recv_data,4)
-        
-    new_data = float_list.extend(recv_data) # index 67 example
+    #print("Recv data:", recv_data)
+    recv_data = data_function.convert_data(recv_data,4)
+    
+    new_data = float_list
+    new_data.extend(recv_data) # index 67 example
+    #print(new_data)
     init_df = init_df.append([new_data], data_columns)
+#print(init_df)
 print('Initialise dataframe completed.')
+
 
 ### create folder to store data
 ##timestr = time.strftime("%Y%m%d-%H%M%S")
@@ -108,16 +113,19 @@ try:
         
         recv_data = client_sock.recv(3000).decode("utf-8") #1024 in example
         print("received R data: [%s]" % recv_data)      
-        recv_data = data_function.convert_data2(recv_data,4)
+        recv_data = data_function.convert_data(recv_data,4)
         
-        new_data = float_list.extend(recv_data)
+        new_data = float_list
+        new_data.extend(recv_data)
         
         # append new data and restructure dataframe
         init_df = init_df.append([new_data], data_columns)
         init_df = init_df[1:].reset_index(drop=True)
+        #print(init_df)
                 
         # model prediction
         predict_values = init_df.values
+        #print(predict_values)
 
         # ensure all data is float
         predict_values = predict_values.astype('float32')
@@ -125,7 +133,7 @@ try:
         scaled_predict = predict_scaler.transform(predict_values)
 
         # frame as supervised learning
-        reframed_predict = series_to_supervised(scaled_predict, look_back, 1) #look back window of 25
+        reframed_predict = model_function.series_to_supervised(scaled_predict, look_back, 1) #look back window of 25
     
         # reshape input to be 3D [samples, timesteps, features]
         reframed_predict = reframed_predict.values.reshape((reframed_predict.shape[0], look_back+1, n_features))
@@ -145,7 +153,7 @@ try:
         
         # output feedback signal
         #if (float_list[-1]>=3):
-        if (prediction[0]=1):    
+        if (prediction[0]==1):    
             print('ask R output')
             client_sock.send("501,".encode("utf-8")) # ask client to turn on output
         
