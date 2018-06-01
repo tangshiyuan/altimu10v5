@@ -66,6 +66,17 @@ def combine_record_data_csv(data_floatlist, data_str, path):
     temp_df.to_csv(path+'recorded_dataset.csv', mode='a', index = False, header=False)
     return
 
+def combine_record_log_csv(data_floatlist, pred_list, path):
+    #data_list = convert_data(data_str)
+    #data_list = data_str
+    #data_floatlist.extend(data_list)
+    data_floatlist.extend(pred_list)
+    temp_df = pd.DataFrame(np.array(data_floatlist).reshape(-1,len(data_floatlist)), 
+                           columns = ['accX_L','accY_L','accZ_L','acc_L','accX_R','accY_R','accZ_R','acc_R','prediction','probability0','probability1'])
+    temp_df['time'] = datetime.now().strftime("%Y%m%d-%H:%M:%S.%f")
+    temp_df.to_csv(path+'log.csv', mode='a', index = False, header=False)
+    return
+
 def floatlist2string(mylist):    
     convert = ''
     for i in range(0,len(mylist)):

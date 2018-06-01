@@ -96,11 +96,11 @@ for i in range(0,look_back+1):
 print('Initialise dataframe completed.')
 
 
-### create folder to store data
-##timestr = time.strftime("%Y%m%d-%H%M%S")
-##path = '/home/pi/Desktop/Data/'+timestr+'/'
-##if not os.path.exists(path):
-##    os.makedirs(path)
+# create folder to store data
+timestr = time.strftime("%Y%m%d-%H%M%S")
+path = '/home/pi/Desktop/Log/'+timestr+'/'
+if not os.path.exists(path):
+    os.makedirs(path)
 
 try:
     while True:
@@ -141,8 +141,9 @@ try:
         reframed_predict = reframed_predict.values.reshape((reframed_predict.shape[0], look_back+1, n_features))
     
         # predict
-        prediction = lstm_model.predict(reframed_predict).argmax(axis=1)
-        print('Prediction:', prediction[0])
+        prediction_prob = lstm_model.predict(reframed_predict)
+        prediction = prediction_prob.argmax(axis=1)
+        print('Prediction:', prediction[0], 'Probability:', prediction_prob)
         
         
 ##        if (recv_data[-1] >= 3):
@@ -153,16 +154,24 @@ try:
 ##            if not t1.is_alive():
 ##                t1.start()
         
+        if (prediction[0]==0):    
+            print('ask L output')
+            t1 = Thread(target=turn_on, args=(pin1,))
+            if not t1.is_alive():
+                t1.start()
+        
+        
         # output feedback signal
         #if (float_list[-1]>=3):
         if (prediction[0]==1):    
             print('ask R output')
             client_sock.send("501,".encode("utf-8")) # ask client to turn on output
         
+        pred_list = [prediction[0], prediction_prob[0][0], prediction_prob[0][1]]
         
          
         # save data
-        #data_function.combine_record_data_csv(float_list, recv_data, path)
+        data_function.combine_record_log_csv(new_data, pred_list, path)
         
         #print(float_list[-1])
         
