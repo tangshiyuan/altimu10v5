@@ -6,6 +6,7 @@ import socket
 import data_function
 import time
 import os
+import sys
 import RPi.GPIO as GPIO
 
 def turn_on(pin):
@@ -33,7 +34,8 @@ lsm6ds33.enable()
 
 # Initialise socket
 sock = socket.socket()
-host = '192.168.1.238' #ip of host
+host = sys.argv[1]
+#host = '192.168.1.238' #ip of host
 port = 12345
 sock.bind((host, port))
 

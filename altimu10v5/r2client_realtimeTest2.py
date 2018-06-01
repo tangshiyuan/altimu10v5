@@ -1,4 +1,4 @@
-from Board import *
+#from Board import *
 from lsm6ds33 import LSM6DS33
 from threading import Thread
 
@@ -25,7 +25,7 @@ GPIO.setup(pin1, GPIO.OUT)
 #GPIO.setup(pin2, GPIO.OUT)
 
 # Initialise ADDA component (force sensor)
-board = Board()
+#board = Board()
 
 # Initialise (accelerometer)
 lsm6ds33 = LSM6DS33()
@@ -50,10 +50,11 @@ while True:
     #print(type(receive))
     print("Receive command:" ,receive)
     #if (receive == "100"): # sensor data requested
-    force = board.custom() # force sensor data
+    
+    #force = board.custom() # force sensor data
     float_list = data_function.round_floatlist(lsm6ds33.get_accelerometer_g_forces(),3) # accel data
     float_list.append(data_function.rss_floatlist(float_list))
-    float_list.append(force)
+    #float_list.append(force)
         
         # convert float list to string
     data = data_function.floatlist2string(float_list)+','
@@ -67,7 +68,7 @@ while True:
     sock.send(data.encode("utf-8"))
         
     if (int(receive[0])== 501): # command to output signal
-        board.output(200) # turn on LED on ADDA board
+        #board.output(200) # turn on LED on ADDA board
         #GPIO.output(pin1, (GPIO.HIGH)) # turn on buzzer
         t1 = Thread(target=turn_on, args=(pin1,))
         if not t1.is_alive():
